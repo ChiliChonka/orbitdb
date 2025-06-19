@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Chat</title></head>
+<body>
+<textarea id="chat" rows="10" cols="50"></textarea><br>
+<input id="msg"/><button id="send">Send</button>
+<script type="module">
+import { create } from 'https://cdn.jsdelivr.net/npm/ipfs-http-client@60.0.1/dist/index.min.js';
+import { OrbitDB } from 'https://cdn.jsdelivr.net/npm/@orbitdb/core@3.0.2/dist/orbitdb.min.js';
+const ipfs = create({ url: '/ip4/127.0.0.1/tcp/5001' });
+const orbitdb = await OrbitDB.createInstance(ipfs);
+const res = await fetch('/api/address');
+const { address } = await res.json();
+const db = await orbitdb.feed(address);
+await db.load();
+const chat = document.getElementById('chat');
+function render(){chat.value=db.iterator({limit:-1}).collect().map(e=>e.payload.value.text).join('\n');}
+db.events.on('replicated', render);render();
+document.getElementById('send').onclick=async()=>{const text=document.getElementById('msg').value;await fetch('/api/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});document.getElementById('msg').value='';};
+</script>
+</body>
+</html>
