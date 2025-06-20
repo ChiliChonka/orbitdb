@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Chat</title>
+  <link rel="icon" href="data:,">
 </head>
 <body>
 <textarea id="chat" rows="10" cols="50"></textarea><br>
@@ -13,6 +14,17 @@
 const { create } = IpfsHttpClient;
 const { createOrbitDB } = OrbitDB;
 const ipfs = create({ url: 'http://localhost:5001' });
+const id = await ipfs.id();
+ipfs.libp2p = {
+  peerId: { toString: () => id.id },
+  services: {
+    pubsub: {
+      subscribe: (...a) => ipfs.pubsub.subscribe(...a),
+      unsubscribe: (...a) => ipfs.pubsub.unsubscribe(...a),
+      publish: (...a) => ipfs.pubsub.publish(...a)
+    }
+  }
+};
 const orbitdb = await createOrbitDB({ ipfs });
 const res = await fetch('http://localhost:3000/address');
 const { address } = await res.json();
