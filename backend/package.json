@@ -2,10 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {"start": "node index.js"},
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^5.1.0",
     "ipfs-http-client": "^60.0.1",
-    "@orbitdb/core": "^3.0.2"
+    "orbit-db": "^0.29.0"
   }
 }

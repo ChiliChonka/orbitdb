@@ -1,10 +1,10 @@
 const express = require('express');
-const { create } = require('ipfs-http-client');
-const { OrbitDB } = require('@orbitdb/core');
 
 const IPFS_API = process.env.IPFS_API || 'http://ipfs:5001';
 
 (async () => {
+  const { create } = await import('ipfs-http-client');
+  const { default: OrbitDB } = await import('orbit-db');
   const ipfs = create({ url: IPFS_API });
   const orbitdb = await OrbitDB.createInstance(ipfs);
   const db = await orbitdb.feed('chat', { accessController: { write: ['*'] }});
