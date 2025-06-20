@@ -5,8 +5,10 @@
 <textarea id="chat" rows="10" cols="50"></textarea><br>
 <input id="msg"/><button id="send">Send</button>
 <script type="module">
-import { create } from 'https://cdn.jsdelivr.net/npm/ipfs-http-client@60.0.1/dist/index.min.js';
-import { OrbitDB } from 'https://cdn.jsdelivr.net/npm/@orbitdb/core@3.0.2/dist/orbitdb.min.js';
+import ipfsClient from 'https://cdn.jsdelivr.net/npm/ipfs-http-client@60.0.1/dist/index.min.js';
+import orbitdbMod from 'https://cdn.jsdelivr.net/npm/@orbitdb/core@3.0.2/dist/orbitdb.min.js';
+const { create } = ipfsClient;
+const { OrbitDB } = orbitdbMod;
 // connect to the IPFS HTTP API exposed by the docker-compose stack
 const ipfs = create({ url: 'http://localhost:5001' });
 const orbitdb = await OrbitDB.createInstance(ipfs);
