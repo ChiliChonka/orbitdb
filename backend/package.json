@@ -9,5 +9,8 @@
     "express": "^5.1.0",
     "ipfs-http-client": "^60.0.1",
     "orbit-db": "^0.29.0"
+  },
+  "overrides": {
+    "@multiformats/multiaddr": "^12.5.0"
   }
 }
