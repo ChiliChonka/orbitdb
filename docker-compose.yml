@@ -6,6 +6,7 @@ services:
       - "5001:5001"
     volumes:
       - ipfs:/data/ipfs
+    command: daemon --migrate=true --enable-pubsub-experiment
   backend:
     build: ./backend
     environment:

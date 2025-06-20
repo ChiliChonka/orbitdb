@@ -11,3 +11,6 @@ docker-compose up --build
 ```
 
 Visit `http://localhost:8080` in two browsers to chat.
+
+The included IPFS node runs with `--enable-pubsub-experiment` so OrbitDB can
+replicate chat messages between peers.
