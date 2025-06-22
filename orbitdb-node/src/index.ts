@@ -1,15 +1,16 @@
 import { createLibp2p } from 'libp2p'
 import { createHelia } from 'helia'
+//@ts-ignore
 import { createOrbitDB } from '@orbitdb/core'
 import { LevelBlockstore } from 'blockstore-level'
 import { Libp2pOptions } from './config/libp2p.js'
 
 // Create an IPFS instance.
-const blockstore = new LevelBlockstore('./ipfs/blocks')
+const blockstore = new LevelBlockstore('./blockstore/ipfs/blocks')
 const libp2p = await createLibp2p(Libp2pOptions)
 const ipfs = await createHelia({ libp2p, blockstore })
 
-const orbitdb = await createOrbitDB({ ipfs })
+const orbitdb = await createOrbitDB({ ipfs, directory: `./blockstore/orbitdb` })
 
 const db = await orbitdb.open('my-db')
 

@@ -10,11 +10,11 @@ const main = async () => {
   // create a random directory to avoid OrbitDB conflicts.
   let randDir = (Math.random() + 1).toString(36).substring(2)
     
-  const blockstore = new LevelBlockstore(`./${randDir}/ipfs/blocks`)
+  const blockstore = new LevelBlockstore(`./blockstore/${randDir}/ipfs/blocks`)
   const libp2p = await createLibp2p(Libp2pOptions)
   const ipfs = await createHelia({ libp2p, blockstore })
 
-  const orbitdb = await createOrbitDB({ ipfs, directory: `./${randDir}/orbitdb` })
+  const orbitdb = await createOrbitDB({ ipfs, directory: `./blockstore/${randDir}/orbitdb` })
 
   let db
 

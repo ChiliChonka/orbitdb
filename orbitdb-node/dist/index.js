@@ -1,5 +1,6 @@
 import { createLibp2p } from 'libp2p';
 import { createHelia } from 'helia';
+//@ts-ignore
 import { createOrbitDB } from '@orbitdb/core';
 import { LevelBlockstore } from 'blockstore-level';
 import { Libp2pOptions } from './config/libp2p.js';
