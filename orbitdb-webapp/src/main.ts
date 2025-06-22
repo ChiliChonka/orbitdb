@@ -4,6 +4,8 @@ import { webSockets } from '@libp2p/websockets'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
+import { identify } from '@libp2p/identify'
+import { multiaddr } from '@multiformats/multiaddr'
 // @ts-ignore
 import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
 
@@ -13,6 +15,7 @@ const start = async () => {
     connectionEncrypters: [noise()],
     streamMuxers: [yamux()],
     services: {
+      identify: identify(),
       pubsub: gossipsub({ allowPublishToZeroTopicPeers: true })
     }
   })
@@ -20,8 +23,13 @@ const start = async () => {
   const ipfs = await createHelia({ libp2p })
   const orbitdb = await createOrbitDB({ ipfs })
 
+  const peer = new URLSearchParams(window.location.search).get('peer') || '/ip4/127.0.0.1/tcp/41535/ws/p2p/12D3KooWL5dkiBivpjYibPRRf7HhDPdRfAA6bn8g3fec7CEdirGP';
+  if(peer) {
+    orbitdb.ipfs.libp2p.dial(multiaddr(peer));
+  }
+
   let db
-  const addr = new URLSearchParams(window.location.search).get('db')
+  const addr = new URLSearchParams(window.location.search).get('db') || '/orbitdb/zdpuB2aYUCnZ7YUBrDkCWpRLQ8ieUbqJEVRZEd5aDhJBDpBqj'
   if (addr) {
     db = await orbitdb.open(addr)
   } else {
