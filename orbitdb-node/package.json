@@ -1,0 +1,31 @@
+{
+  "name": "orbitdb-node",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChiliChonka/orbitdb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChiliChonka/orbitdb/issues"
+  },
+  "homepage": "https://github.com/ChiliChonka/orbitdb#readme",
+  "description": "",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@chainsafe/libp2p-gossipsub": "^14.1.1",
+    "@orbitdb/core": "^3.0.2",
+    "blockstore-level": "^2.0.3",
+    "helia": "^5.4.2"
+  }
+}
