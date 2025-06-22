@@ -21,7 +21,11 @@ const main = async () => {
   const libp2p = await createLibp2p({ ...(Libp2pOptions as any), privateKey } as any)
   const ipfs = await createHelia({ libp2p, blockstore })
 
-  const orbitdb = await createOrbitDB({ ipfs, directory: `./blockstore/${randDir}/orbitdb` })
+  const orbitdb = await createOrbitDB({
+    ipfs,
+    directory: `./blockstore/${randDir}/orbitdb`,
+    accessController: { write: ['*'] }
+  })
 
   let db
 
