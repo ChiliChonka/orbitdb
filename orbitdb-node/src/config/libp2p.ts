@@ -8,7 +8,7 @@ import { yamux } from '@chainsafe/libp2p-yamux'
 
 export const Libp2pOptions = {
   addresses: {
-    listen: ['/ip4/0.0.0.0/tcp/0', '/ip4/0.0.0.0/tcp/0/ws']
+    listen: ['/ip4/0.0.0.0/tcp/10333', '/ip4/0.0.0.0/tcp/10333/ws']
   },
   transports: [
     tcp(),
