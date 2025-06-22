@@ -6,6 +6,17 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { identify } from '@libp2p/identify'
 import { multiaddr } from '@multiformats/multiaddr'
+      identify: identify(),
+  const peerAddr = new URLSearchParams(window.location.search).get('peer')
+  if (peerAddr) {
+    await libp2p.dial(multiaddr(peerAddr))
+  } else {
+    (document.getElementById('multiaddrs') as HTMLInputElement).value = libp2p.getMultiaddrs().map(ma => ma.toString()).join(', ')
+  }
+
+
+import { identify } from '@libp2p/identify'
+import { multiaddr } from '@multiformats/multiaddr'
 // @ts-ignore
 import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
 
