@@ -17,6 +17,7 @@
   "dependencies": {
     "@chainsafe/libp2p-gossipsub": "^14.1.1",
     "@orbitdb/core": "^3.0.2",
+    "@libp2p/websockets": "^9.1.5",
     "blockstore-level": "^2.0.3",
     "helia": "^5.4.2"
   }
