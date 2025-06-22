@@ -7,28 +7,17 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { identify } from '@libp2p/identify'
 import { multiaddr } from '@multiformats/multiaddr'
-  const swarmKey = new TextEncoder().encode(
-    '/key/swarm/psk/1.0.0/\n/base16/\nfef2d1aa529dfa67806cd9b7e8984c5c38425cbda4fd3ec208ef4b0f78194844\n'
-  )
-
-    connectionProtector: preSharedKey({ psk: swarmKey }),
-      identify: identify(),
-  const peerAddr = new URLSearchParams(window.location.search).get('peer')
-  if (peerAddr) {
-    await libp2p.dial(multiaddr(peerAddr))
-  } else {
-    (document.getElementById('multiaddrs') as HTMLInputElement).value = libp2p.getMultiaddrs().map(ma => ma.toString()).join(', ')
-  }
-
-
-import { identify } from '@libp2p/identify'
-import { multiaddr } from '@multiformats/multiaddr'
 // @ts-ignore
 import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
+
+const swarmKey = new TextEncoder().encode(
+  '/key/swarm/psk/1.0.0/\n/base16/\nfef2d1aa529dfa67806cd9b7e8984c5c38425cbda4fd3ec208ef4b0f78194844\n'
+)
 
 const start = async () => {
   const libp2p = await createLibp2p({
     transports: [webSockets()],
+    connectionProtector: preSharedKey({ psk: swarmKey }),
     connectionEncrypters: [noise()],
     streamMuxers: [yamux()],
     services: {
@@ -36,6 +25,13 @@ const start = async () => {
       pubsub: gossipsub({ allowPublishToZeroTopicPeers: true })
     }
   })
+
+  const peerAddr = new URLSearchParams(window.location.search).get('peer')
+  if (peerAddr) {
+    await libp2p.dial(multiaddr(peerAddr))
+  } else {
+    (document.getElementById('multiaddrs') as HTMLInputElement).value = libp2p.getMultiaddrs().map(ma => ma.toString()).join(', ')
+  }
 
   const ipfs = await createHelia({ libp2p })
   const orbitdb = await createOrbitDB({ ipfs })
