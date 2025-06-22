@@ -5,6 +5,8 @@ import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
 import { LevelBlockstore } from 'blockstore-level'
 import { Libp2pOptions } from './config/libp2p.js'
 import { multiaddr } from '@multiformats/multiaddr'
+import readline from 'node:readline';
+
 
 const main = async () => {
   // create a random directory to avoid OrbitDB conflicts.
@@ -42,14 +44,30 @@ const main = async () => {
     console.log('update', entry.payload.value)
   })
   
-  if (process.argv[2]) {
-    await db.add('hello from peer ' + orbitdb.ipfs.libp2p.peerId )
-    await db.add('hello again from second peer ' + orbitdb.ipfs.libp2p.peerId)
-  } else {
-    // write some records
-    await db.add('hello from first peer ' + orbitdb.ipfs.libp2p.peerId)
-    await db.add('hello again from first peer ' + orbitdb.ipfs.libp2p.peerId)    
-  }
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: "> "
+  });
+  rl.prompt();
+
+  rl.on('line', async (line) => {
+    const input = line.trim();
+
+    if (input === 'exit') {
+      rl.close();
+      return;
+    }
+
+    // Hier kannst du etwas mit der Eingabe machen
+    await db.add(orbitdb.ipfs.libp2p.peerId + ": " + input)
+    // Zeigt wieder den Prompt
+    rl.prompt();
+  }).on('close', () => {
+    console.log('Tschüss!');
+    process.exit(0);
+  });
+
   // Clean up when stopping this app using ctrl+c
   process.on('SIGINT', async () => {
       // print the final state of the db.
