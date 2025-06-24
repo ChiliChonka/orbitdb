@@ -6,15 +6,21 @@ import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { identify } from '@libp2p/identify'
+import { bootstrap } from '@libp2p/bootstrap'
 import { multiaddr } from '@multiformats/multiaddr'
 // @ts-ignore
 import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
 import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
+import { ping } from '@libp2p/ping'
+import { MemoryBlockstore } from 'blockstore-core/memory'
 
 const swarmKey = new TextEncoder().encode(
   '/key/swarm/psk/1.0.0/\n/base16/\nfef2d1aa529dfa67806cd9b7e8984c5c38425cbda4fd3ec208ef4b0f78194844\n'
 )
 
+const peer = new URLSearchParams(window.location.search).get('peer') || '/ip4/127.0.0.1/tcp/10335/ws/p2p/12D3KooWENza5Fdu8HW3KAF4xhJnjjyq6wyDvjmrM3cBmP6Vshih';
+const addr = new URLSearchParams(window.location.search).get('db') || '/orbitdb/zdpuB2aYUCnZ7YUBrDkCWpRLQ8ieUbqJEVRZEd5aDhJBDpBqj'
+  
 const start = async () => {
   const libp2p = await createLibp2p({
     transports: [
@@ -27,8 +33,24 @@ const start = async () => {
     services: {
       relay: circuitRelayServer(),
       identify: identify(),
-      pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
-    }    
+      pubsub: gossipsub({
+        allowPublishToZeroTopicPeers: true,
+        scoreThresholds: {
+          gossipThreshold: -9999,
+          publishThreshold: -9999,
+          graylistThreshold: -9999,
+          acceptPXThreshold: -9999
+        },
+        scoreParams: {
+          topics: {},
+          decayInterval: 1_000,
+          decayToZero: 0.01,
+          retainScore: 10_000
+        }        
+      }),
+      ping: ping()
+    },
+    peerDiscovery: [bootstrap({ list: ['/ip4/127.0.0.1/tcp/10335/ws/p2p/12D3KooWENza5Fdu8HW3KAF4xhJnjjyq6wyDvjmrM3cBmP6Vshih'] })]
   })
 
   const peerAddr = new URLSearchParams(window.location.search).get('peer')
@@ -38,7 +60,8 @@ const start = async () => {
     (document.getElementById('multiaddrs') as HTMLInputElement).value = libp2p.getMultiaddrs().map(ma => ma.toString()).join(', ')
   }
 
-  const ipfs = await createHelia({ libp2p })
+  const blockstore = new MemoryBlockstore()
+  const ipfs = await createHelia({ libp2p, blockstore })
   const orbitdb = await createOrbitDB({ ipfs })
 
   const peer = new URLSearchParams(window.location.search).get('peer') || '/ip4/127.0.0.1/tcp/10335/ws/p2p/12D3KooWENza5Fdu8HW3KAF4xhJnjjyq6wyDvjmrM3cBmP6Vshih';
