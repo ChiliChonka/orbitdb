@@ -1,0 +1,51 @@
+= OrbitDB Playground
+
+This repository contains example projects for experimenting with `libp2p`, `Helia`
+and `OrbitDB`. It consists of two sub projects that can be run together using the
+provided `docker-compose.yml` file.
+
+== orbitdb-peer
+
+`orbitdb-peer` is a command line peer written in TypeScript. It uses libp2p to
+communicate over WebSockets and stores its data in OrbitDB. After building the
+project the peer can be started to create or join a database and publish
+entries.
+
+[source,bash]
+----
+npm install
+npm run build
+node dist/index.js
+----
+
+A pre generated `peer-id.json` file is included and will be copied into the
+Docker image. The peer listens on port `10335` when run inside Docker.
+
+== orbitdb-webapp
+
+`orbitdb-webapp` is a small web application built with Vite and TypeScript. It
+connects to a running peer through libp2p and allows you to view and add
+entries in the database from the browser.
+
+[source,bash]
+----
+npm install
+npm run dev        # development mode
+npm run build
+npm run preview    # serve the built app
+----
+
+The Docker container serves the production build using `vite preview` on port
+`4173`.
+
+== Usage with Docker Compose
+
+Both projects can be started together using the provided compose file.
+
+[source,bash]
+----
+docker compose up --build
+----
+
+This launches the peer and the web application. The web UI will be available on
+`http://localhost:8080` and connects to the peer on port `10335`.
