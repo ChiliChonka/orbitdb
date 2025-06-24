@@ -6,11 +6,9 @@ import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { identify } from '@libp2p/identify'
-import { bootstrap } from '@libp2p/bootstrap'
 import { multiaddr } from '@multiformats/multiaddr'
 // @ts-ignore
 import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
-import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { ping } from '@libp2p/ping'
 import { MemoryBlockstore } from 'blockstore-core/memory'
 
@@ -25,13 +23,11 @@ const start = async () => {
   const libp2p = await createLibp2p({
     transports: [
       webSockets(),
-      //circuitRelayTransport()
     ],
     connectionProtector: preSharedKey({ psk: swarmKey }),
     connectionEncrypters: [noise()],
     streamMuxers: [yamux()],
     services: {
-      //relay: circuitRelayServer(),
       identify: identify(),
       pubsub: gossipsub({
         allowPublishToZeroTopicPeers: true,

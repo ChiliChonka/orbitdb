@@ -16,7 +16,7 @@ const main = async () => {
   let randDir = (Math.random() + 1).toString(36).substring(2)
     
   const blockstore = new LevelBlockstore(`./blockstore/${randDir}/ipfs/blocks`)
-  const peerIdData = JSON.parse(fs.readFileSync(new URL('../peer-id.json', import.meta.url)).toString())
+  const peerIdData = JSON.parse(fs.readFileSync(new URL('../peer-id_1.json', import.meta.url)).toString())
   const privateKey = privateKeyFromProtobuf(uint8ArrayFromString(peerIdData.privateKey, 'base64pad'))
   const libp2p = await createLibp2p({ ...(Libp2pOptions as any), privateKey } as any)
   const ipfs = await createHelia({ libp2p, blockstore })
