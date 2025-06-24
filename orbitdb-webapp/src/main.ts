@@ -25,13 +25,13 @@ const start = async () => {
   const libp2p = await createLibp2p({
     transports: [
       webSockets(),
-      circuitRelayTransport()
+      //circuitRelayTransport()
     ],
     connectionProtector: preSharedKey({ psk: swarmKey }),
     connectionEncrypters: [noise()],
     streamMuxers: [yamux()],
     services: {
-      relay: circuitRelayServer(),
+      //relay: circuitRelayServer(),
       identify: identify(),
       pubsub: gossipsub({
         allowPublishToZeroTopicPeers: true,
@@ -50,7 +50,7 @@ const start = async () => {
       }),
       ping: ping()
     },
-    peerDiscovery: [bootstrap({ list: ['/ip4/127.0.0.1/tcp/10335/ws/p2p/12D3KooWENza5Fdu8HW3KAF4xhJnjjyq6wyDvjmrM3cBmP6Vshih'] })]
+    peerDiscovery: []
   })
 
   const peerAddr = new URLSearchParams(window.location.search).get('peer')
@@ -61,7 +61,11 @@ const start = async () => {
   }
 
   const blockstore = new MemoryBlockstore()
-  const ipfs = await createHelia({ libp2p, blockstore })
+  const ipfs = await createHelia({
+    libp2p,
+    blockstore,
+    routers: []
+  })
   const orbitdb = await createOrbitDB({ ipfs })
 
   const peer = new URLSearchParams(window.location.search).get('peer') || '/ip4/127.0.0.1/tcp/10335/ws/p2p/12D3KooWENza5Fdu8HW3KAF4xhJnjjyq6wyDvjmrM3cBmP6Vshih';
