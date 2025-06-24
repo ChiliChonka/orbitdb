@@ -9,11 +9,11 @@ services:
   peer:
     build: ./orbitdb-peer
     ports:
-      - "3000:3000"
+      - "10335:10335"
   webapp:
-    build: ./frontend
+    build: ./orbitdb-webapp
     ports:
-      - "8080:80"
+      - "8080:4173"
     depends_on:
       - peer
 #volumes:
