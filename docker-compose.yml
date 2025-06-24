@@ -1,24 +1,20 @@
 services:
-  ipfs:
-    image: ipfs/kubo:latest
-    ports:
-      - "5001:5001"
-    volumes:
-      - ipfs:/data/ipfs
-    command: daemon --migrate=true --enable-pubsub-experiment
-  backend:
-    build: ./backend
-    environment:
-      - IPFS_API=http://ipfs:5001
+#  ipfs:
+#    image: ipfs/kubo:latest
+#    ports:
+#      - "5001:5001"
+#    volumes:
+#      - ipfs:/data/ipfs
+#    command: daemon --migrate=true --enable-pubsub-experiment
+  peer:
+    build: ./orbitdb-peer
     ports:
       - "3000:3000"
-    depends_on:
-      - ipfs
-  frontend:
+  webapp:
     build: ./frontend
     ports:
       - "8080:80"
     depends_on:
-      - backend
-volumes:
-  ipfs:
+      - peer
+#volumes:
+#  ipfs:
