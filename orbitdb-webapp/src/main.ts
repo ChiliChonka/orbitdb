@@ -89,6 +89,14 @@ const start = async () => {
     document.getElementById('entries')!.appendChild(item)
   })
 
+  for (const ev of ['replicate','replicated','update','write','join','leave','error'] as const) {
+    db.events.on(ev, (...args: any) => console.log(`[${ev}]`, ...args))
+  }
+  
+  for await (const entry of db.iterator({ limit: -1 })) {
+    console.log('Historischer Eintrag:', entry.value);
+  }
+
   document.getElementById('form')!.addEventListener('submit', async (e) => {
     e.preventDefault()
     const input = (document.getElementById('input') as HTMLInputElement)
