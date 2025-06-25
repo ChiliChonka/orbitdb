@@ -7,13 +7,20 @@ import { circuitRelayTransport, circuitRelayServer } from '@libp2p/circuit-relay
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { ping } from '@libp2p/ping'
 
+var wsPort = 10335
+if (process.argv[4]) {
+ wsPort = parseInt(process.argv[4]);
+}
+
 const swarmKey = new TextEncoder().encode(
   '/key/swarm/psk/1.0.0/\n/base16/\nfef2d1aa529dfa67806cd9b7e8984c5c38425cbda4fd3ec208ef4b0f78194844\n'
-)
+);
+
+const listAddress = '/ip4/0.0.0.0/tcp/'+ wsPort + '/ws';
 
 export const Libp2pOptions = {
   addresses: {
-    listen: ['/ip4/0.0.0.0/tcp/10335/ws']
+    listen: [listAddress]
   },
   transports: [
     webSockets(),

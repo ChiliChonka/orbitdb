@@ -14,9 +14,13 @@ import readline from 'node:readline'
 const main = async () => {
   // create a random directory to avoid OrbitDB conflicts.
   let randDir = (Math.random() + 1).toString(36).substring(2)
-    
+
+  let peerFile = '../peer-id_1.json'
+  if (process.argv[5]) {
+    peerFile = process.argv[5]
+  }
   const blockstore = new LevelBlockstore(`./blockstore/${randDir}/ipfs/blocks`)
-  const peerIdData = JSON.parse(fs.readFileSync(new URL('../peer-id_1.json', import.meta.url)).toString())
+  const peerIdData = JSON.parse(fs.readFileSync(new URL(peerFile, import.meta.url)).toString())
   const privateKey = privateKeyFromProtobuf(uint8ArrayFromString(peerIdData.privateKey, 'base64pad'))
   const libp2p = await createLibp2p({ ...(Libp2pOptions as any), privateKey } as any)
   const ipfs = await createHelia({ libp2p, blockstore })
