@@ -12,6 +12,16 @@ import { createOrbitDB, IPFSAccessController } from '@orbitdb/core'
 import { ping } from '@libp2p/ping'
 import { MemoryBlockstore } from 'blockstore-core/memory'
 
+let worker = new SharedWorker('orbitdb.worker.js');
+worker.port.start();
+
+worker.port.onmessage = function (e) {
+    console.log('Caller Received:', e.data);
+}
+
+worker.port.postMessage('Message');
+
+
 const swarmKey = new TextEncoder().encode(
   '/key/swarm/psk/1.0.0/\n/base16/\nfef2d1aa529dfa67806cd9b7e8984c5c38425cbda4fd3ec208ef4b0f78194844\n'
 )
